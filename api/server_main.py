@@ -13,6 +13,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '3' # 指定GPU（如果有需要）
 import numpy as np
 from server_model import CaptchaModel
+from time import time as tc
 
 # 读取类别编号映射类别文件，将模型识别出来的编号还原为类别
 def read_classes(classes_file):
@@ -38,19 +39,20 @@ model = CaptchaModel(ocr_model_meta=ocr_model_meta,
 
 # ============ 调用示例 ============
 # 建议加上日志系统，把识别的图片、识别结果保存， 方便后面问题的排查以及对验证码产生的规律进行统计分析
-from time import time as tc
-tic = tc()
 
-print("模型加载完毕")
-for x in range(2, 19):
-    word_ind, objs_ind = model.predict('/Users/dtstack/PycharmProjects/Crack12306WithAI/misc/captcha/e_{}.jpg'
-                                       .format(str(x)))
+
+def crack_captcha(captcha_img):
+
+    tic = tc()
+    print("模型加载完毕")
+    word_ind, objs_ind = model.predict(captcha_img)
     word = classes[word_ind]
     objs = classes[objs_ind]
-    print("e_{}.jpg".format(str(x)), unicode(word[0], "utf-8"), objs[0])
-print('time elapsed:{:.2f}'.format(tc()-tic))
+    print(unicode(word[0], "utf-8"), objs[0])
 
-model.close() # 程序结束时把模型关闭
+    print('time elapsed:{:.2f}'.format(tc()-tic))
+    return word[0]
+    # model.close() # 程序结束时把模型关闭
 
 
 
