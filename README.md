@@ -1,0 +1,1 @@
+利用tensorflow破解12306验证码，目前手头上没有gpu，只能使用cpu勉强凑合，同时对于tensorflow+cv也是在学习中.
